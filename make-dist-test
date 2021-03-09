@@ -1,0 +1,25 @@
+#!/bin/sh
+#SysTool test
+#Tests the installation of SysTool
+#Made By: Eli Nero
+
+#Startup
+echo "Starting..."
+make dist #Make .tar.gz
+#Create and enter directory for test build
+echo "Extracting and entering test folder..."
+mv systool-*.tar.gz systool-test-build.tar.gz #Rename the .tar.gz file so the resulting folder has a better name
+tar --extract --file systool-test-build.tar.gz #Extract the .tar.gz file
+cd systool-test-build #Enter the new directory
+#Build systool
+echo "Building SysTool..."
+./configure
+make
+DESTDIR=/tmp/systool-test-build make install #Builds systool is /tmp/systool-test-build/
+#Clean up
+echo "Done making! Exiting dir and cleaning up..."
+cd ..
+rm  systool-test-build.tar.gz #Remove the .tar.gz
+rm -r systool-test-build #Remove the test directory
+#Exit program
+echo "Done! Systool is build in /tmp/systool-test-build/"
