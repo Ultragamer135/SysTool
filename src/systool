@@ -1,10 +1,9 @@
 #!/bin/sh
 #SysTool
 #A collection of helpful tools, gadgets, customizations, and fixes for Linux and Bash.
-#Made By: Eli Nero
 
 #Program data
-SYSTOOL_VERSION="b-1.0" #Program version
+SYSTOOL_VERSION="B1.0" #Program version
 
 #Program options
 SYSTOOL_OPTIONS_prog="hvV" #Program options
@@ -12,96 +11,73 @@ SYSTOOL_OPTIONS_exec="C:N" #Command execution options
 SYSTOOL_OPTIONS_info="bi" #Info actions
 SYSTOOL_OPTIONS_tool="fF" #Tool actions
 SYSTOOL_OPTIONS_gadgets="nst" #Gadget actions
-SYSTOOL_OPTIONS="${SYSTOOL_OPTIONS_prog}${SYSTOOL_OPTIONS_exec}${SYSTOOL_OPTIONS_info}${SYSTOOL_OPTIONS_tool}${SYSTOOL_OPTIONS_gadgets}"
+SYSTOOL_OPTIONS="${SYSTOOL_OPTIONS_prog}${SYSTOOL_OPTIONS_exec}${SYSTOOL_OPTIONS_info}${SYSTOOL_OPTIONS_tool}${SYSTOOL_OPTIONS_gadgets}" #Generate a list of all options.
 
 #Settings
-BANNER_text="SysTool v$SYSTOOL_VERSION"
-BANNER_command="figlet"
-BANNER_opts="-ktf"
-VOPT_command="neofetch"
+BANNER_text="SysTool v$SYSTOOL_VERSION" #Text to show for banner
+BANNER_command="figlet" #Command to use to show banner
+BANNER_opts="-ktf" #Options to use with the banner command
+BANNER_infocommand="neofetch" #Command to use to show system info with the banner
 
 #Functions - main
 verbose() { #Detect if set to be verbose
-if [ $SYSTOOL_verbose = "true" ]; then return 0; else return 1; fi
+    if [ $SYSTOOL_verbose = "true" ]; then return 0; else return 1; fi
 }
-zeroify() { #Prefix numbers less than 10 with 0, e.x. $zeroify 1 #01 $zeroify 11 #11
-if [ $1 -lt 10 ];
-then echo "\"0$1\"";
-else echo "\"$1\"";
-fi
-}
+
 #Functions - tools
 info_user() { #Get info about current session and user
-env echo -e "\
-Sessions: $(who -q | awk -F"=" '/#/{print$2}') \t Uptime: $(if (neofetch uptime); then true; else uptime; fi | awk -F': ' '{print $2}') \
-User: $USER \t Home: $HOME \t Language: $LANGUAGE \t Display: $DISPLAY \
-" | expand -t 1
-}
+    env echo -e "\
+    Sessions: $(who -q | awk -F"=" '/#/{print$2}') \t Uptime: $(if (neofetch uptime); then true; else uptime; fi | awk -F': ' '{print $2}') \
+    User: $USER \t Home: $HOME \t Language: $LANGUAGE \t Display: $DISPLAY \
+    " | expand -t 1 }
 banner() { #Show banner
-figlet -ktf banner "$BANNER_text"
-figlet -ktf small "Hello, $USER!"
-figlet -ktf mini $(date "+%B %d" && date "+%l:%M %p")
+    $BANNER_command $BANNER_opts banner "$BANNER_text"
+    $BANNER_command $BANNER_opts small "Hello, $USER!"
+    $BANNER_command $BANNER_opts mini $(date "+%B %d" && date "+%l:%M %p")
 }
-file_menu_num() { #File explorer
+file_menu() { #File explorer
 while true; do
-ls | env awk '{print NR": "$0}'
-read -p "Select file: " input
-clear
-if [ -z $input ]; then break; else
-file=$(ls | env awk "NR==${input}")
-if [ -d $file ]; then cd $file
-elif [ -f $file ]; then ${EDITOR:-nano} $file
-else echo "Error"
-fi fi done
-}
-file_menu() {
-while true; do
-if (verbose); then a="-a"; else a=""; fi
-input=$(ls $a | env awk '{print NR" "$0}' | dialog --menu $(pwd) 30 50 30 $(cat) --stdout)
-#input=$(ls $a | env awk '{print NR" "$0}' | show_menu $(pwd) 30 50 $(cat))
-if [ -z $input ]; then break; else
-file=$(ls | env awk "NR==$input")
-if (verbose); then echo "Input is $input"; fi #Verbose
-if (verbose); then echo "File is $file"; fi #Verbose
-if [ -d $file ]; then cd $file
-elif [ -f $file ]; then ${EDITOR:-nano} $file
-else echo "Error"
-fi fi done
-}
+    if (verbose); then a="-a"; else a=""; fi
+    input=$(ls $a | env awk '{print NR" "$0}' | dialog --menu $(pwd) 30 50 30 $(cat) --stdout)
+    if [ -z $input ]; then break; else
+        file=$(ls | env awk "NR==$input")
+    if (verbose); then echo "Input is $input"; fi #Verbose
+    if (verbose); then echo "File is $file"; fi #Verbose
+    if [ -d $file ]; then cd $file
+    elif [ -f $file ]; then ${EDITOR:-nano} $file
+    else echo "Error"
+    fi fi done }
 tmux_menu() { #List, create, or connect to tmux sessions
-tmux ls
-read -p "Session name (Leave blank to create new): " input
-if [ -z $input ]; then tmux new-session #If input is blank then create session
-else
-exec tmux attach -t $input
-fi
-}
+    tmux ls
+    read -p "Session name (Leave blank to create new): " input
+    if [ -z $input ]; then tmux new-session #If input is blank then create session
+    else
+    exec tmux attach -t $input
+fi }
 
 #Setup program
 SYSTOOL_verbose=false
 trap "echo 'Ctrl-C detected, exiting...' && clear" 1 2 3 #Exit cleanly
 
 #Main
-while getopts $SYSTOOL_OPTIONS"c:" opt
+while getopts $SYSTOOL_OPTIONS opt #Runs below code only while there are still options to handle
 do
-    case $opt in
+    case $opt in #Case condition to deal with options
     #SysTool stuff
-        h) echo "WIP" ;; #SysTool help
-        v) echo $SYSTOOL_VERSION ;; #Show Systool version
+        h) echo "$0 -[hvVC] | Check the man page for advanced usage info" ;; #SysTool help
+        v) echo "$0 $SYSTOOL_VERSION" ;; #Show Systool version
         V) SYSTOOL_verbose=true && echo "Is verbose!" && sleep 1 ;; #Set SysTool to be verbose
-    #SysTool command execution
         C) command $OPTARG ;; #Run a command
-        N) command $VOPT_command ;; #Runs neofetch by defeault. runs $VOPT_command
     #Info
         b) banner ;; #Show banner
+        B) command $BANNER_infocommand ;; #Runs the command in $BANNER_infocommand to show system info
         i) info_user ;; #Show user info
     #Tools
         f) file_menu ;; #File explorer
-        F) file_menu_num ;; #File explorer
+        t) tmux_menu ;; #Attach to a tmux session
     #Gadgets
         n) sudo arp-scan --localnet -x ;; #List devices on network
         s) w -s | awk 'NR>1' ;; #Show sessions
-        t) tmux_menu ;; #Attach to a tmux session
     esac
 done
-if (verbose); then echo "Out of getopts loop, OPTIND is $OPTIND"; fi
+if (verbose); then echo "Out of getopts loop, OPTIND is $OPTIND"; fi #Print extra info if verbose

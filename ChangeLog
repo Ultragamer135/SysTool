@@ -1,3 +1,29 @@
-b-1.0
+B-1.0
 =====
 First Beta release!
+
+B-1.1
+=====
+Removed some extra test files.
+Deleted systool-dist-test because it wasn't nessasary and it was unused.
+Removed the clean-extra rule from Makefile.am
+Removed man/systool.man and man/systool.texi because they were outdated.
+Moved the -t option to the tools section in the code.
+Changed the documentation to have info about the -t option.
+Removed the EXAMPLES section from the systool manpage.
+Added an authors section to the manpage, with info about the Main Developer and instructions to visit the AUTHORS file for a full list.
+Added comments to the while loop, the case condition, and the Settings section of the code.
+Added a comment to the last line of the file.
+Changed $VOPT_command to $BANNER_infocommand in the code.
+Changed the comment for the -F option in the case condition in the code from "File explorer" to "File explorer, number based."
+Made the Portable Installation section of the README file a sub-section of the Installing section of the README file.
+Removed an incorrect step in the Building From Sourse section of the README file.
+Modified the CONTRIBUTING section in the README file to contain a step about adding to the ChangeLog.
+Removed "and running from the server" from the title of the Building a Portable Installation section of the README file.
+Made the main steps in the Installation section of the README file into a sub-section.
+
+B-1.2
+=====
+Styled up the file a bit and added indents.
+Removed the number-based file explorer.
+Made the contributing section of the README file shorter.

@@ -50,8 +50,8 @@ Many options make **SysTool** run actions, which are the various functions provi
 **-f**
 : Opens a file explorer UI. The up and down arrow keys on the keyboard navigate between items, and enter opens the current directory or file.
 
-**-F**
-: Opens a basic file explorer based on numbers. Typing the number of a file or folder and pressing enter will open the file with the corresponding number.
+**-t**
+: Opens a list of tmux sessions, and allows you to connect to one. If no session is selected, a new tmux session is started.
 
 ### Gadgets
 
@@ -61,9 +61,6 @@ Many options make **SysTool** run actions, which are the various functions provi
 **-s**
 : Displays a list of current sessions on this PC.
 
-**-t**
-: Displays
-
 # EXIT VALUES
 **0**
 : Program run was succesful
@@ -71,11 +68,12 @@ Many options make **SysTool** run actions, which are the various functions provi
 **1**
 : An error occured.
 
-# EXAMPLES
-Coming Soon(TM)
-
 # CAVEATS
 If the -V option is provided to set **SysTool** to be verbose, but other options come before it, the options specified before -V are not ran in verbose mode. For example, using the options -Vfv will make **SysTool** be set to verbose mode, then run -f in verbose mode, then -v in verbose mode; while using the options -fVv will make **SysTool** run -f in non-verbose mode, turn on verbose mode, and run -v in verbose mode.
 
 # BUGS
 The bug tracker can be found on the SysTool Github page (https://github.com/UsernameNotAvalible/SysTool)
+
+# AUTHORS
+Main Developer: Eli Nero (elinero27@gmail.com)
+Check the AUTHORS file in the systool directory.
